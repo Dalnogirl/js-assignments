@@ -98,7 +98,7 @@ describe('01-strings-tasks', () => {
     assert.linesOfCode(extractEmails, 1);
   });
 
-  it.optional('getRectangleString should return the string reprentation of rectangle with specified size', () => {
+  it.optional('getRectangleString should return the string representation of rectangle with specified size', () => {
     assert.equal(
       getRectangleString(6, 4),
       '┌────┐\n' +
