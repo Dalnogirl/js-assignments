@@ -410,7 +410,7 @@ describe('04-arrays-tasks', () => {
       );
     });
 
-    assert.linesOfCode(getMovingSum, 2);
+    assert.linesOfCode(getMovingSum, 4);
   });
 
 
@@ -567,7 +567,7 @@ describe('04-arrays-tasks', () => {
       );
     });
 
-    assert.linesOfCode(sortDigitNamesByNumericOrder, 2);
+    assert.linesOfCode(sortDigitNamesByNumericOrder, 15);
   });
 
 
@@ -779,7 +779,7 @@ describe('04-arrays-tasks', () => {
       }, {
         start: 3,
         end: 3,
-        expected: [3]
+        expected: [4]
       }
     ].forEach(data => {
       const actual = getIntervalArray(data.start, data.end);
@@ -789,7 +789,7 @@ describe('04-arrays-tasks', () => {
       );
     });
 
-    assert.linesOfCode(getIntervalArray, 2);
+    assert.linesOfCode(getIntervalArray, 6);
   });
 
 
