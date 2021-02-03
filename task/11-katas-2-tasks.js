@@ -1,4 +1,3 @@
-
 /**
  * Returns the bank account number parsed from specified string.
  *
@@ -35,10 +34,32 @@
  *   '|_||_  _||_| _||_| _||_| _|\n',
  *
  */
-function parseBankAccount(bankAccount) {
-  throw new Error('Not implemented');
-}
+function parseBankAccount(str) {
+  const par = str.split('\n').slice(0, 3)
+  const kek = []
+  let res = ''
+  for (let i = 0; i < par[0].length - 1; i += 3) {
+    kek.push(
+      par[0].slice(i, i + 3) + par[1].slice(i, i + 3) + par[2].slice(i, i + 3))
+  }
 
+  const presets = {
+    '     |  |': '1',
+    ' _  _||_ ': '2',
+    ' _  _| _|': '3',
+    '   |_|  |': '4',
+    ' _ |_  _|': '5',
+    ' _ |_ |_|': '6',
+    ' _   |  |': '7',
+    ' _ |_||_|': '8',
+    ' _ |_| _|': '9',
+    ' _ | ||_|': '0'
+  }
+  for (const num of kek) {
+    res += presets[num]
+  }
+  return res
+}
 
 /**
  * Returns the string, but with line breaks inserted at just the right places to make
@@ -68,9 +89,21 @@ function parseBankAccount(bankAccount) {
  *      'characters.'
  */
 function* wrapText(text, columns) {
-  throw new Error('Not implemented');
+  const result = []
+  text.split(' ').reduce((acc, item, index, arr) => {
+    if (acc.length <= columns) {
+      if (acc.length + item.length < columns) {
+        acc += ` ${item}`
+      } else {
+        result.push(acc === '' ? item : acc)
+        acc = item
+      }
+    }
+    if (index === arr.length - 1) result.push(acc ? acc : item)
+    return acc
+  }, '')
+  while (result.length) yield result.shift().trim()
 }
-
 
 /**
  * Returns the rank of the specified poker hand.
@@ -102,12 +135,11 @@ const PokerRank = {
   TwoPairs: 2,
   OnePair: 1,
   HighCard: 0
-};
-
-function getPokerHandRank(hand) {
-  throw new Error('Not implemented');
 }
 
+function getPokerHandRank(hand) {
+  throw new Error('Not implemented')
+}
 
 /**
  * Returns the rectangles sequence of specified figure.
@@ -141,7 +173,7 @@ function getPokerHandRank(hand) {
  *    '+-------------+\n'
  */
 function* getFigureRectangles(figure) {
-  throw new Error('Not implemented');
+  throw new Error('Not implemented')
 }
 
 module.exports = {
@@ -150,4 +182,4 @@ module.exports = {
   PokerRank: PokerRank,
   getPokerHandRank: getPokerHandRank,
   getFigureRectangles: getFigureRectangles
-};
+}

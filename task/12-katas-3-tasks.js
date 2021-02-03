@@ -1,4 +1,3 @@
-
 /**
  * Returns true if word occurrs in the specified word snaking puzzle.
  * Each words can be constructed using "snake" path inside a grid with top, left,
@@ -7,7 +6,7 @@
  *
  * @param {array} puzzle
  * @param {array} searchStr
- * @return {bool}
+ * @return {boolean}
  *
  * @example
  *   var puzzle = [
@@ -27,10 +26,91 @@
  *   'FUNCTION'  => false
  *   'NULL'      => false
  */
-function findStringInSnakingPuzzle(puzzle, searchStr) {
-  throw new Error('Not implemented');
-}
+function findStringInSnakingPuzzle(_puzzle, searchStr) {
+  const puzzle = _puzzle.map(i => i.split(''))
+  let currentWord = searchStr[0]
+  const startPoints = []
+  for (let i = 0; i < puzzle.length; i++) {
+    for (let j = 0; j < puzzle[0].length; j++) {
+      if (puzzle[i][j] === searchStr[0]) startPoints.push([i, j])
+    }
+  }
+  return startPoints.some(i => search(puzzle, ...i))
 
+  function search(_puzzle, y, x) {
+    if (currentWord === searchStr) return true
+    const puzzle = [..._puzzle]
+    while (currentWord.length < searchStr.length) {
+      if (goTop()) {
+        continue
+      }
+      if (goLeft()) {
+        continue
+      }
+      if (goRight()) {
+        continue
+      }
+      if (goBot()) {
+        continue
+      }
+
+      if (currentWord === searchStr) return true
+      currentWord = searchStr[0]
+      return false
+    }
+
+    function goRight() {
+      if (puzzle[y][x + 1]
+        && puzzle[y][x + 1] === searchStr[currentWord.length]) {
+        currentWord += puzzle[y][x + 1]
+        puzzle[y][x] = undefined
+        x++
+        return true
+      } else {
+        return false
+      }
+    }
+
+    function goBot() {
+      if (puzzle[y + 1]
+        && puzzle[y + 1][x] === searchStr[currentWord.length]) {
+        currentWord += puzzle[y + 1][x]
+        puzzle[y][x] = undefined
+        y++
+        return true
+      } else {
+        return false
+      }
+    }
+
+    function goLeft() {
+      if (puzzle[y][x - 1]
+        && puzzle[y][x - 1] === searchStr[currentWord.length]) {
+        currentWord += puzzle[y][x - 1]
+        puzzle[y][x] = undefined
+        x--
+        return true
+      } else {
+        return false
+      }
+    }
+
+    function goTop() {
+      if (puzzle[y - 1]
+        && puzzle[y - 1][x] === searchStr[currentWord.length]) {
+        currentWord += puzzle[y - 1][x]
+        puzzle[y][x] = undefined
+        y--
+        return true
+      } else {
+        return false
+      }
+    }
+
+    return currentWord === searchStr
+  }
+
+}
 
 /**
  * Returns all permutations of the specified string.
@@ -46,9 +126,18 @@ function findStringInSnakingPuzzle(puzzle, searchStr) {
  *    'abc' => 'abc','acb','bac','bca','cab','cba'
  */
 function* getPermutations(chars) {
-  throw new Error('Not implemented');
-}
+  function* recursive(result) {
+    if (result.length === chars.length) {
+      yield result
+    } else {
+      for (let i = 0; i < chars.length; i++) {
+        if (result.indexOf(chars[i]) < 0) yield* recursive(result + chars[i]) // compose here
+      }
+    }
+  }
 
+  yield* recursive('')
+}
 
 /**
  * Returns the most profit from stock quotes.
@@ -68,9 +157,21 @@ function* getPermutations(chars) {
  *    [ 1, 6, 5, 10, 8, 7 ] => 18  (buy at 1,6,5 and sell all at 10)
  */
 function getMostProfitFromStockQuotes(quotes) {
-  throw new Error('Not implemented');
-}
+  let profit = 0
 
+  while (quotes.length) {
+    const maxQuote = Math.max(...quotes)
+    const maxQuoteIndex = quotes.indexOf(maxQuote)
+    const income = maxQuote * maxQuoteIndex
+    const expense = quotes.slice(0, maxQuoteIndex).reduce((acc, item) => {
+      return acc + item
+    }, 0)
+    profit += income - expense
+    quotes = quotes.slice(maxQuoteIndex + 1)
+  }
+
+  return profit
+}
 
 /**
  * Class representing the url shorting helper.
@@ -87,24 +188,25 @@ function getMostProfitFromStockQuotes(quotes) {
  *
  */
 function UrlShortener() {
-  this.urlAllowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-                          'abcdefghijklmnopqrstuvwxyz' +
-                          "0123456789-_.~!*'();:@&=+$,/?#[]";
+  this.urlAllowedChars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+    'abcdefghijklmnopqrstuvwxyz' +
+    '0123456789-_.~!*\'();:@&=+$,/?#[]'
 }
 
 UrlShortener.prototype = {
   encode(url) {
-    throw new Error('Not implemented');
+    throw new Error('Not implemented')
   },
 
   decode(code) {
-    throw new Error('Not implemented');
+    throw new Error('Not implemented')
   }
-};
+}
 
 module.exports = {
   findStringInSnakingPuzzle: findStringInSnakingPuzzle,
   getPermutations: getPermutations,
   getMostProfitFromStockQuotes: getMostProfitFromStockQuotes,
   UrlShortener: UrlShortener
-};
+}
