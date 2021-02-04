@@ -1,4 +1,3 @@
-
 /** ******************************************************************************************
  *                                                                                          *
  * Plese read the following tutorial before implementing tasks:                             *
@@ -6,7 +5,6 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date    *
  *                                                                                          *
  ******************************************************************************************* */
-
 
 /**
  * Parses a rfc2822 string date representation into date value
@@ -21,7 +19,7 @@
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
 function parseDataFromRfc2822(value) {
-  throw new Error('Not implemented');
+  return new Date(value)
 }
 
 /**
@@ -36,9 +34,8 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T08:07:37Z' => Date()
  */
 function parseDataFromIso8601(value) {
-  throw new Error('Not implemented');
+  return Date.parse(value)
 }
-
 
 /**
  * Returns true if specified date is leap year and false otherwise
@@ -55,9 +52,9 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-  throw new Error('Not implemented');
+  const year = date.getFullYear()
+  return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)
 }
-
 
 /**
  * Returns the string represention of the timespan between two dates.
@@ -75,12 +72,12 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-  throw new Error('Not implemented');
+  const diff = new Date(endDate - startDate)
+  return diff.toISOString().slice(11, -1)
 }
 
-
 /**
- * Returns the angle (in radians) between the hands of an analog clock for the 
+ * Returns the angle (in radians) between the hands of an analog clock for the
  * specified Greenwich time.
  * If you have problem with solution please read: https://en.wikipedia.org/wiki/Clock_angle_problem
  *
@@ -94,7 +91,18 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-  throw new Error('Not implemented');
+  const DateUTC = new Date(Date.parse(date))
+
+  const minutes = DateUTC.getUTCMinutes()
+  const hours = DateUTC.getUTCHours()
+
+  let res =(60 * hours - 11 * minutes) / 2
+  while (res >= 360) {
+    res -= 360
+  }
+  if (res > 180) res = 360 - res
+
+  return res * Math.PI / 180
 }
 
 module.exports = {
@@ -103,4 +111,4 @@ module.exports = {
   isLeapYear: isLeapYear,
   timeSpanToString: timeSpanToString,
   angleBetweenClockHands: angleBetweenClockHands
-};
+}
