@@ -15,8 +15,43 @@
  *  ]
  */
 function createCompassPoints(sides = ['N', 'E', 'S', 'W']) {
-  /* use array of cardinal directions only! it is a default parameter! */
-  throw new Error('Not implemented')
+  function* directCoors(from, to, dir) {
+    const result = [
+      `${from}b${to}`,
+      `${from}${from}${to}`,
+      `${from}${to}b${from}`,
+      `${from}${to}`,
+      `${from}${to}b${to}`,
+      `${to}${from}${to}`,
+      `${to}b${from}`]
+
+    if (dir === 'f') {result.reverse()}
+
+    for (const i of result) {
+      yield i
+    }
+  }
+
+  const result = []
+  let azimuth = 0
+  const items = [
+    {dir: 'N', func: directCoors('N', 'E', 'd')},
+    {dir: 'E', func: directCoors('S', 'E', 'f')},
+    {dir: 'S', func: directCoors('S', 'W', 'd')},
+    {dir: 'W', func: directCoors('N', 'W', 'f')}
+  ]
+
+  items.forEach(item => {
+    result.push({abbreviation: item.dir, azimuth: azimuth})
+    azimuth += 11.25
+
+    for (let i = 0; i < 7; i++) {
+      result.push({abbreviation: item.func.next().value, azimuth: azimuth})
+      azimuth += 11.25
+    }
+  })
+
+  return result
 }
 
 /**

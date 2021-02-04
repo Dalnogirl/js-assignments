@@ -138,7 +138,83 @@ const PokerRank = {
 }
 
 function getPokerHandRank(hand) {
-  throw new Error('Not implemented')
+  class Get {
+    constructor(hand) {
+      this._ranks = 'A234567891JQKA'
+      this.suits = []
+      this.ranks = {
+        count: [],
+        values: [],
+        sorted: []
+      }
+
+      for (const v of hand) {
+        if (this.ranks.values.indexOf(v[0]) < 0) {
+          this.ranks.values.push(v[0])
+          this.ranks.count.push(1)
+        } else {
+          this.ranks.count[this.ranks.values.indexOf(v[0])]++
+        }
+
+        if (this.suits.indexOf(v.slice(-1)) < 0) this.suits.push(v.slice(-1))
+      }
+      this.ranks.sorted = this.ranks.values.sort(
+        (a, b) => this._ranks.indexOf(a) - this._ranks.indexOf(b)
+      )
+      if (this.ranks.sorted[0] === 'A'
+        && this.ranks.sorted[1] !== '2') {
+        this.ranks.sorted.splice(0, 1)
+        this.ranks.sorted.push('A')
+      }
+    }
+
+    getCount(cnt) {
+      let res = 0
+      for (const v of this.ranks.count) if (v === cnt) res++
+      return res
+    }
+
+    isFlush() {
+      return this.suits.length === 1
+    }
+
+    isStraight() {
+      if (this.ranks.sorted.length < 5) return false
+      for (let i = 1; i < 5; i++) {
+        if (
+          this._ranks.indexOf(this.ranks.sorted[i - 1]) + 1 !==
+          this._ranks.indexOf(this.ranks.sorted[i]) &&
+          this._ranks.indexOf(this.ranks.sorted[i - 1]) + 1 !==
+          this._ranks.lastIndexOf(this.ranks.sorted[i])
+        ) {
+          return false
+        }
+      }
+      return true
+    }
+  }
+
+  hand = new Get(hand)
+
+  if (hand.isFlush() && hand.isStraight()) {
+    return PokerRank.StraightFlush
+  } else if (hand.getCount(4)) {
+    return PokerRank.FourOfKind
+  } else if (hand.getCount(3) && hand.getCount(2)) {
+    return PokerRank.FullHouse
+  } else if (hand.isFlush()) {
+    return PokerRank.Flush
+  } else if (hand.isStraight()) {
+    return PokerRank.Straight
+  } else if (hand.getCount(3)) {
+    return PokerRank.ThreeOfKind
+  } else if (hand.getCount(2) === 2) {
+    return PokerRank.TwoPairs
+  } else if (hand.getCount(2)) {
+    return PokerRank.OnePair
+  } else {
+    return PokerRank.HighCard
+  }
 }
 
 /**
@@ -173,7 +249,51 @@ function getPokerHandRank(hand) {
  *    '+-------------+\n'
  */
 function* getFigureRectangles(figure) {
-  throw new Error('Not implemented')
+  const a = figure.split('\n')
+  const answer = []
+  const check = function bar(n, m) {
+    let i
+    let j
+    for (i = m; ; i++) {
+      if (a[n - 1][i] === undefined || a[n - 1][i] === ' ' || a[n] ===
+        undefined) {
+        return
+      }
+      if (a[n][i] !== ' ') break
+    }
+    const w = i
+    for (j = n; ; j++) {
+      if (a[j] === undefined || a[j][w] === ' ') return
+      if (a[j][w - 1] !== ' ') break
+    }
+    const h = j
+    for (i = w - 1; ; i--) {
+      if (a[h][i] === undefined || a[h][i] === ' ' || a[h - 1] ===
+        undefined) {
+        return
+      }
+      if (a[h - 1][i] !== ' ') break
+    }
+    if (i + 1 !== m) return
+    for (j = h - 1; ; j--) {
+      if (a[j] === undefined || a[j][m - 1] === ' ') return
+      if (a[j][m] !== ' ') break
+    }
+    if (j + 1 !== n) return
+    n = h - n
+    m = w - m
+    answer.push(
+      '+' + '-'.repeat(m) + '+\n' + ('|' + ' '.repeat(m) + '|\n').repeat(n) +
+      '+' + '-'.repeat(m) + '+\n')
+  }
+
+  a.pop()
+  a.forEach((v, i) => v.split('').forEach((v, j) => {
+    if (v === '+') check(i + 1, j + 1)
+  }))
+  for (const item of answer) {
+    yield item
+  }
 }
 
 module.exports = {
