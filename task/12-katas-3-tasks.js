@@ -192,15 +192,18 @@ function UrlShortener() {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
     'abcdefghijklmnopqrstuvwxyz' +
     '0123456789-_.~!*\'();:@&=+$,/?#[]'
+  this.data = {}
 }
 
 UrlShortener.prototype = {
-  encode(url) {
-    throw new Error('Not implemented')
+  encode(longURL) {
+    const shortURL = 'bit.ly/' + longURL.replace(/[^a-z]/g, '').slice(-4)
+    if(!this.data[shortURL]) this.data[shortURL] = longURL
+    return shortURL
   },
 
-  decode(code) {
-    throw new Error('Not implemented')
+  decode(shortURL) {
+    return this.data[shortURL];
   }
 }
 
